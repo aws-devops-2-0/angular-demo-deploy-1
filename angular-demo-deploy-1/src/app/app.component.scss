@@ -1,0 +1,42 @@
+.container {
+    max-width: 600px;
+    margin: 5rem auto;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f9fbfc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #1a73e8;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:disabled {
+        background-color: #90caf9;
+        cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+        background-color: #1558b0;
+    }
+}
+
+.status {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: #28a745;
+}

@@ -1,0 +1,15 @@
+<div class="container">
+  <header>
+    <h1>{{ title }}</h1>
+  </header>
+
+  <main>
+    <button (click)="runTest()" [disabled]="isLoading">
+      {{ isLoading ? 'Testing...' : 'Run Deployment Test' }}
+    </button>
+
+    <div class="status" *ngIf="status">
+      {{ status }}
+    </div>
+  </main>
+</div>
