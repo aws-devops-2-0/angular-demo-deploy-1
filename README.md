@@ -1,5 +1,3 @@
-# angular-demo-deploy-1
-
 ## 🚀 Deploy Angular App on AWS EC2 (Dev Server Setup)
 
 This guide explains how to deploy your Angular application on an AWS EC2 instance using `ng serve` for testing purposes.
