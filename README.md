@@ -220,3 +220,70 @@ This method uses Angular’s development server and is **not suitable for produc
 * Building with `ng build`
 * Serving with **Nginx** or **Apache**
 * Using HTTPS, load balancers, and CI/CD
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                            Stopping the Angular Development Server or Nginx 
+
+# 🛑 Stopping the Angular Development Server or Nginx on AWS EC2
+
+## 1. Stopping the Angular Development Server (`ng serve`)
+
+### If Started in the Foreground (Standard Way)
+1. In your SSH terminal (the one running `ng serve`), press:
+   ```
+   Ctrl + C
+   ```
+   This will gracefully stop the dev server.
+
+### If Started in the Background (with `&` or `nohup`)
+1. Find the process ID (PID) for the Angular dev server:
+   ```bash
+   ps aux | grep ng
+   ```
+   Look for a line showing `ng serve` or `node` related to your project.
+2. Kill the process using the PID found:
+   ```bash
+   kill <PID>
+   ```
+   Replace `<PID>` with the actual number.  
+   If it does not stop, use:
+   ```bash
+   kill -9 <PID>
+   ```
+
+---
+
+## 2. Stopping the Nginx Server
+
+**Recommended: Use systemd to stop Nginx safely**
+
+```bash
+sudo systemctl stop nginx
+```
+
+This command stops the Nginx service gracefully.
+
+---
+
+## 3. Verifying That the Server Has Stopped
+
+- Check running processes:
+  ```bash
+  ps aux | grep ng
+  ps aux | grep nginx
+  ```
+- If you see no relevant `ng serve` or `nginx` process (except for your grep command), the server is stopped.
+- Try accessing your app in a browser; it should not load.
+
+---
+
+## 4. Notes
+
+- Never kill system or kernel processes (e.g., `[khungtaskd]`).
+- Always use `systemctl` for Nginx instead of `kill`, to ensure a clean shutdown.
+- For production, prefer stopping Nginx; for development, stop `ng serve`.
+
+---
