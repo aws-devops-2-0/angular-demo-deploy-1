@@ -1,3 +1,142 @@
+## 🌐 Production Deployment on AWS EC2 using Nginx
+
+This section documents how to deploy your Angular app on an AWS EC2 instance with **Nginx** as a production web server.
+
+---
+
+### ✅ Prerequisites
+
+* EC2 instance running **Ubuntu**
+* Inbound rule open for **port 80 (HTTP)** in the **Security Group**
+* Angular project pushed to a Git repository
+
+---
+
+### 🧩 Step-by-Step Deployment Guide
+
+#### 1. **SSH into EC2**
+
+```bash
+ssh -i your-key.pem ubuntu@<your-ec2-public-ip>
+```
+
+#### 2. **Install Node.js, npm, Angular CLI**
+
+```bash
+sudo apt update
+sudo apt install -y git curl
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g @angular/cli
+```
+
+---
+
+#### 3. **Clone Your Angular Project**
+
+```bash
+git clone <your-repo-url>
+cd <your-project-folder>
+```
+
+---
+
+#### 4. **Install Dependencies & Build Project**
+
+If you're using Angular Universal (SSR/prerender):
+
+```bash
+npm install
+ng build --configuration production
+```
+
+> ⚠️ Your build files will be in:
+> `dist/<your-project-name>/browser/`
+
+---
+
+#### 5. **Install and Configure Nginx**
+
+```bash
+sudo apt install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
+
+Create a new Nginx config file:
+
+```bash
+sudo nano /etc/nginx/sites-available/angular-app
+```
+
+Paste the following config:
+
+```nginx
+server {
+    listen 80;
+    server_name _;
+
+    root /var/www/angular-app;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+Enable the site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/angular-app /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
+```
+
+Test and reload Nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+---
+
+#### 6. **Copy Build Files to Web Root**
+
+If build is inside `dist/<project-name>/browser`, copy like this:
+
+```bash
+sudo mkdir -p /var/www/angular-app
+sudo cp -r dist/<your-project-name>/browser/* /var/www/angular-app
+sudo chown -R www-data:www-data /var/www/angular-app
+sudo chmod -R 755 /var/www/angular-app
+```
+
+---
+
+### 🚀 Access the Application
+
+Open a browser:
+
+```
+http://<your-ec2-public-ip>
+```
+
+Your Angular app should now load successfully.
+
+---
+
+### 📌 Notes
+
+* This setup serves **static Angular builds** — perfect for production.
+* If you don’t use SSR/prerendering, the build output will be directly in `dist/<project-name>/`.
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                      Testing Purpose
 ## 🚀 Deploy Angular App on AWS EC2 (Dev Server Setup)
 
 This guide explains how to deploy your Angular application on an AWS EC2 instance using `ng serve` for testing purposes.
@@ -81,4 +220,3 @@ This method uses Angular’s development server and is **not suitable for produc
 * Building with `ng build`
 * Serving with **Nginx** or **Apache**
 * Using HTTPS, load balancers, and CI/CD
-
